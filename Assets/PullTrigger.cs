@@ -4,24 +4,25 @@ using UnityEngine;
 
 public class PullTrigger : MonoBehaviour
 {
-    [SerializeField] int damage = 5;
-    [SerializeField] float targetDistance, currentDistance = 15f;
+	[SerializeField] int damage = 5;
+	[SerializeField] float targetDistance, currentDistance = 15f;
 
-    private void Update()
-    {
-        if(Input.GetButtonDown("Fire1"))
-        {
-            RaycastHit Shot;
+	private void Update()
+	{
+		if (Input.GetButtonDown("Fire1") && Bullet.ammo > 0)
+		{
+			Bullet.ammo--;
+			RaycastHit Shot;
 
-            if(Physics.Raycast(transform.position, transform.TransformDirection(Vector3.forward), out Shot))
-            {
-                targetDistance = Shot.distance;
+			if (Physics.Raycast(transform.position, transform.TransformDirection(Vector3.forward), out Shot))
+			{
+				targetDistance = Shot.distance;
 
-                if(targetDistance <= currentDistance)
-                {
-                    Shot.transform.SendMessage("enemy", damage);
-                }
-            }
-        }
-    }
+				if (targetDistance <= currentDistance)
+				{
+					Shot.transform.SendMessage("enemy", damage);
+				}
+			}
+		}
+	}
 }

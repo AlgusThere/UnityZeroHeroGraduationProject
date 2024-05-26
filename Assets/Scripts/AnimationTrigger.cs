@@ -13,7 +13,7 @@ public class AnimationTrigger : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetButtonDown("Fire1") && _animator != false)
+        if (Input.GetButtonDown("Fire1") && Bullet.ammo > 0 )
         {
             AudioSource gunSound = GetComponent<AudioSource>();
             gunSound.Play();
