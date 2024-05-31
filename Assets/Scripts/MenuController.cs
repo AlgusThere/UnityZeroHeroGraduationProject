@@ -19,6 +19,7 @@ public class MenuController : MonoBehaviour
     {
         volumeSlider.onValueChanged.AddListener(SetVolume);
         SetVolume(defaultVolume);
+        Cursor.lockState = CursorLockMode.None;
     }
 
     public void SetVolume(float volume)

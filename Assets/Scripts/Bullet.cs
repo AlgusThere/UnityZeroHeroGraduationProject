@@ -16,5 +16,9 @@ public class Bullet : MonoBehaviour
         Ammo.GetComponent<Text>().text = " " + internalAmmo;
         spareInternalAmmo = spareAmmo;
         SpareAmmo.GetComponent<Text>().text = " " + spareInternalAmmo;
+        if(ammo == 0)
+        {
+            Ammo.GetComponent<Text>().text = "0";
+        }
     }
 }
