@@ -14,6 +14,7 @@ public class MenuController : MonoBehaviour
 
     [Header("Level To Load")]
     public string loadScene;
+    public Animator anim;
 
     private void Start()
     {
@@ -46,6 +47,13 @@ public class MenuController : MonoBehaviour
 
     public void LoadScene()
     {
+        StartCoroutine(scenePass());
+    }
+
+    IEnumerator scenePass()
+    {
+        anim.SetTrigger("pass");
+        yield return new WaitForSeconds(1f);
         SceneManager.LoadScene(loadScene);
     }
 
