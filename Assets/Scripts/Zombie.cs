@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.AI.Navigation;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class Zombie : MonoBehaviour
 {
@@ -17,6 +19,11 @@ public class Zombie : MonoBehaviour
     private float attackCoolDown = 1.5f;
     private float currentCoolDown = 0;
 
+    [Header("AI")]
+    public NavMeshAgent agent;
+    public float range;
+    public Transform centrePoint;
+
     public void enemy(int DamageValue)
     {
         enemyHealth -= DamageValue;
@@ -27,6 +34,8 @@ public class Zombie : MonoBehaviour
         animator = zombie.GetComponent<Animator>();
 
         InvokeRepeating("RandomMovement", 0f, 2f);
+
+        agent = GetComponent<NavMeshAgent>();
     }
 
     private void Update()
@@ -41,15 +50,17 @@ public class Zombie : MonoBehaviour
             }
             else if (distanceToTarget <= detectRange)
             {
+                agent.enabled = false;
                 MoveTowardsTarget();
                 walk = true;
             }
             else
             {
+                agent.enabled = true;
                 walk = false;
                 animator.SetBool("walk", true);
                 animator.SetBool("isAttack", false);
-                RandomMovement();
+                randomMovementTry();
             }
         }
         if (currentCoolDown > 0)
@@ -59,15 +70,6 @@ public class Zombie : MonoBehaviour
         else
         {
             isAttack = false;
-        }
-
-        void RandomMovement()
-        {
-            if (!walk)
-            {
-                float randomAngle = Random.Range(0, 360f);
-                transform.Rotate(0f, randomAngle, 0f);
-            }
         }
         void MoveTowardsTarget()
         {
@@ -84,6 +86,7 @@ public class Zombie : MonoBehaviour
             zombie.GetComponent<Animator>().SetBool("isAttack", false);
             Invoke("enemyDead", 2);
         }
+
     }
 
     void enemyDead()
@@ -100,7 +103,7 @@ public class Zombie : MonoBehaviour
             isAttack = true;
             PlayerHeal.OyuncuCan -= 1;
             currentCoolDown = attackCoolDown;
-            if(PlayerHeal.OyuncuCan > 0 )
+            if (PlayerHeal.OyuncuCan > 0)
             {
                 int randomSoundIndex = Random.Range(0, zombieSound.Length);
                 zombieSound[randomSoundIndex].Play();
@@ -115,5 +118,33 @@ public class Zombie : MonoBehaviour
         damageScreen.SetActive(true);
         yield return new WaitForSeconds(0.1f);
         damageScreen.SetActive(false);
+    }
+
+    void randomMovementTry()
+    {
+
+        if (agent.remainingDistance <= agent.stoppingDistance)
+        {
+            Vector3 point;
+            if (RandomPoint(centrePoint.position, range, out point))
+            {
+                Debug.DrawRay(point, Vector3.up, Color.blue, 1.0f);
+                agent.SetDestination(point);
+            }
+        }
+        bool RandomPoint(Vector3 center, float range, out Vector3 result)
+        {
+
+            Vector3 randomPoint = center + Random.insideUnitSphere * range;  
+            NavMeshHit hit;
+            if (NavMesh.SamplePosition(randomPoint, out hit, 0.5f, NavMesh.AllAreas))
+            {
+                result = hit.position;
+                return true;
+            }
+
+            result = Vector3.zero;
+            return false;
+        }
     }
 }

@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -18,9 +19,19 @@ public class PlayerMovement : MonoBehaviour
     Vector3 Velocity;
     private bool isOnGround;
 
+    [Header("Kamera")]
+    [SerializeField] private GameObject Camera;
+    private Animator anim;
+    Vector3 sonKonum;
+
+
     private void Start()
     {
         characterController = GetComponent<CharacterController>();
+
+        anim = Camera.GetComponent<Animator>();
+
+        sonKonum = transform.position;
     }
 
     private void Update()
@@ -39,12 +50,12 @@ public class PlayerMovement : MonoBehaviour
 
         characterController.Move(move * walkSpeed * Time.deltaTime);
 
-        if(Input.GetKey(KeyCode.LeftShift))
+        if (Input.GetKey(KeyCode.LeftShift))
         {
             characterController.Move(move * xSpeed * Time.deltaTime);
         }
 
-        if(Input.GetKey(KeyCode.Space) && isOnGround)
+        if (Input.GetKey(KeyCode.Space) && isOnGround)
         {
             Velocity.y = Mathf.Sqrt(_jump * -2f * _gravity);
         }
@@ -52,5 +63,27 @@ public class PlayerMovement : MonoBehaviour
         Velocity.y += _gravity * Time.deltaTime;
 
         characterController.Move(Velocity * Time.deltaTime);
+
+        if (transform.position != sonKonum)
+        {
+            StartBobbing();
+        }
+        else
+        {
+            StopBobbing();
+        }
+
+        sonKonum = transform.position;
+
     }
+
+    private void StartBobbing()
+    {
+        anim.SetBool("isWalking", true);
+    }
+    private void StopBobbing()
+    {
+        anim.SetBool("isWalking", false);
+    }
+
 }
