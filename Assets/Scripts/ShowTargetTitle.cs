@@ -8,14 +8,14 @@ public class ShowTargetTitle : MonoBehaviour
 	public float Distance = CharacterDocument.targetDistance;
 	public GameObject ShowTitle;
 
-    private void Update()
+    private void FixedUpdate()
     {
         Distance = CharacterDocument.targetDistance;
     }
 
     private void OnMouseOver()
     {
-        if (Distance < 8)
+        if (Distance < 10)
         {
             ShowTitle.GetComponent<Text>().text = "Silahý al";
         }

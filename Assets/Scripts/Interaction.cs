@@ -15,11 +15,13 @@ public class Interaction : MonoBehaviour
         _ammo.SetActive(false);
     }
 
-    private void Update()
+    private void FixedUpdate()
     {
+        distance = CharacterDocument.targetDistance;
+
         if (Input.GetButtonDown("Interaction"))
         {
-            if (distance <= 10)
+            if (distance <= 3)
             {
                 InteractionActive();
             }

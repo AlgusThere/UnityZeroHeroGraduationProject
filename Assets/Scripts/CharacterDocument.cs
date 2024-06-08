@@ -7,7 +7,7 @@ public class CharacterDocument : MonoBehaviour
 	public static float targetDistance;
 	public float target;
 
-    private void Update()
+    private void FixedUpdate()
     {
         RaycastHit hit;
 
